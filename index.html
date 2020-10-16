@@ -1,0 +1,157 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <title> Vue Assignment1 </title>
+    <style>
+        form {
+            padding-left: 25%;
+            padding-right: 25%;
+        }
+
+        #new-todo1,
+        #new-todo2,
+        #new-todo3 {
+            width: 217px;
+        }
+
+        #table {
+            width: 918.5px;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+
+        tr {
+            background-color: #ffe839;
+        }
+
+        td {
+            text-align: left;
+            padding: 0em 1em;
+            border: 1px solid black;
+        }
+
+        .activeBackground {
+            background-color: red;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="todo-list-example">
+        <form v-on:submit.prevent="addNewTodo">
+            <label for="new-todo1">First Name</label>
+            <input v-model="newTodoText1" id="new-todo1" placeholder="Enter First Name">
+            <label for="new-todo2">Last Name</label>
+            <input v-model="newTodoText2" id="new-todo2" placeholder="Enter Last Name">
+            <label for="new-todo3">Address</label>
+            <input v-model="newTodoText3" id="new-todo3" placeholder="Enter Address">
+            <button>Add</button>
+        </form>
+        <table id="table">
+            <tr is="todo-item" v-for="(todo, index) in todos" v-bind:key="todo.id" v-bind:fname="todo.fname"
+                v-bind:lname="todo.lName" v-bind:address="todo.address" :active="todo.active"
+                v-on:remove="deleteuser(todos, index, $event)" :class="{ activeBackground: todo.active }"
+                v-on:select="handleSelect($event, index)">
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+    Vue.component('todo-item', {
+        template: '\
+    <tr id="row" >\
+      <td>{{ fname }}</td>\ <td>{{lname}}</td>\<td>{{address}}</td>\
+      <td>\<button v-on:click="$emit(\'remove\',active)">Remove</button>\</td>\
+      <td>\<input v-model=\'active\' @change="$emit(\'select\',active)" type ="checkbox"></td>\
+    </tr>\
+  ',
+        props: ['fname', 'lname', 'address', 'active']
+    })
+    new Vue({
+        el: '#todo-list-example',
+        data: {
+            newTodoText1: '',
+            newTodoText2: '',
+            newTodoText3: '',
+            todos: [
+                {
+                    id: 1,
+                    fname: 'Kurtis',
+                    lName: 'Weissnat',
+                    address: 'Rex Trail',
+                    active: false
+                },
+                {
+                    id: 2,
+                    fname: 'Nicholas',
+                    lName: 'Reichet',
+                    address: 'Bartholomebury',
+                    active: false
+                },
+                {
+                    id: 3,
+                    fname: 'Clementine',
+                    lName: 'Bauch',
+                    address: 'McKenziehaven',
+                    active: false
+                },
+                {
+                    id: 4,
+                    fname: 'Ervin',
+                    lName: 'Graham',
+                    address: 'Vitor Plains',
+                    active: false
+                },
+                {
+                    id: 5,
+                    fname: 'Patricia',
+                    lName: 'Chelsey',
+                    address: 'Skiles Walks',
+                    active: false
+                },
+            ],
+            nextTodoId: 6,
+        },
+        methods: {
+            addNewTodo: function () {
+                if (this.newTodoText1 != '' && this.newTodoText2 != '' && this.newTodoText3 != '') {
+                    this.todos.push({
+                        id: this.nextTodoId++,
+                        fname: this.newTodoText1,
+                        lName: this.newTodoText2,
+                        address: this.newTodoText3,
+                        active: false
+                    })
+                }
+                else {
+                    alert("Invalid Input")
+                }
+                this.newTodoText1 = ''
+                this.newTodoText2 = ''
+                this.newTodoText3 = ''
+            },
+            handleSelect(bool, index) {
+                this.todos[index].active = bool
+            },
+            deleteuser(todos, index, bool) {
+                this.todos[index].active = bool
+                if (bool) {
+                    if (window.confirm("Do you really want to Delete?")) {
+                        todos.splice(index, 1)
+                    }
+                }
+                else{
+                    alert("Only selected entries can be deleted")
+                }
+
+            }
+        }
+    })
+</script>
+
+</html>
